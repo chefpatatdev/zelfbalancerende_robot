@@ -24,19 +24,16 @@ int in3 = 4;
 int in4 = 5;
 
 // PID
-
-const float PIDMaster = 1;
-const float Kp = 31 * PIDMaster; //25.5
-const float Ki = 0.225 * PIDMaster; //0.097 , 0.12
-const float Kd = 975 * PIDMaster; //520 , 540
+const float Kp = 31; 
+const float Ki = 0.225; 
+const float Kd = 975; 
 
 
 double errorSize=0, lastError=0;
 double cumError, rateError;
-double setPoint = -2.75;//-3.19
+double setPoint = -2.75;
 double outPID;
 float motorOutput;
-double speed = 0;
 
 //BLE
 BLEService customService("19B10000-E8F2-537E-4F6C-D104768A1214");
@@ -54,19 +51,13 @@ void setup() {
   pinMode(in4, OUTPUT);
   Serial.begin(9600);
   
-  /*while (!Serial)
-    ;
-  Serial.println("Started");  //Seriele comms starten
-*/
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");  //IMU binnenhalen
-    while (1)
-      ;
+    while (1);
   }
 
     if (!BLE.begin()) {
     Serial.println("starting BLE failed!");
-
     while (1);
   }
 
@@ -101,10 +92,7 @@ void calculateAngle() {
     calculatePID(currentAngle);
   }
 }
-void horizontalSpeed(){
 
-
-}
 void calculatePID(double currentAngle){
   errorSize = tan((setPoint - currentAngle) * DEG_TO_RAD)*RAD_TO_DEG ;  //proportionele term omgezet met tangens 
   cumError += errorSize* deltaTime;
@@ -122,14 +110,6 @@ void motorSturing(int motorSpeed) {  // Programma om de richting en de snelheid 
     digitalWrite(in2, HIGH);
     digitalWrite(in3, LOW);  // Omkeren van de polariteit van de rechter motor om de robot naar achter te sturen
     digitalWrite(in4, HIGH);
-    /*
-    if (abs(motorSpeed) > minPWM-10){                              
-      motorOutput = ((maxPWM-minPWM)/maxPWM)*motorSpeed - minPWM; // eerstegraadsfunctie om de PWM output tussen minPWM en 255 te transformeren
-    }
-    else {
-      motorOutput = 0;   // de motoren uitzetten 
-    }
-    */
     motorOutput = ((maxPWM-minPWM)/maxPWM)*motorSpeed - minPWM;
     analogWrite(enA, abs(motorOutput)-15);
     analogWrite(enB, abs(motorOutput)+15);
@@ -140,13 +120,6 @@ void motorSturing(int motorSpeed) {  // Programma om de richting en de snelheid 
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);  // Omkeren van de polariteit van de rechter motor om de robot naar voor te sturen
     digitalWrite(in4, LOW);
-    /*
-    if (motorSpeed > minPWM-10){
-      motorOutput = ((maxPWM-minPWM)/maxPWM)*motorSpeed + minPWM; // // eerstegraadsfunctie om de PWM output tussen minPWM en 255 te transformeren
-    }
-    else {
-      motorOutput = 0;   // de motoren uitzetten 
-    }*/
     motorOutput = ((maxPWM-minPWM)/maxPWM)*motorSpeed + minPWM;
     analogWrite(enA, abs(motorOutput)-15);
     analogWrite(enB, abs(motorOutput)+15); 
@@ -156,18 +129,11 @@ void motorSturing(int motorSpeed) {  // Programma om de richting en de snelheid 
 void loop() {
     BLEDevice central = BLE.central();
   
- // if(central){
-    //PIDoutput.writeValue((float)currentAngle);
-    
-
- // }
+ if(central){
+    PIDoutput.writeValue((float)currentAngle);
+  }
 
   calculateAngle();
-
-  Serial.println((double)currentAngle);
-
-    
-
   
 }
 
