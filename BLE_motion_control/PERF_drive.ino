@@ -6,7 +6,6 @@ float driveBias = 0;
 float turnBias = 0;
 
 BLEService driveService("19B10000-E8F2-537E-4F6C-D104768A1214");
-//BLEStringCharacteristic pidValuesBLE("2A20", BLERead | BLENotify, 20);
 BLEFloatCharacteristic driveCharac("19B10000-E8F2-537E-4F6C-D104768A1215", BLERead | BLENotify);
 BLEFloatCharacteristic turnCharac("19B10000-E8F2-537E-4F6C-D104768A1216", BLERead | BLENotify);
 
@@ -47,8 +46,6 @@ void loop() {
     Serial.print("Connected to central: ");
     // print the central's BT address:
     Serial.println(central.address());
-    // check the battery level every 200ms
-    // while the central is connected:
     while (central.connected()) {
       if (Serial.available()) {
         char inChar = Serial.read();
