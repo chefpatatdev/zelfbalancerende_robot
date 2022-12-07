@@ -144,14 +144,14 @@ void loop() {
 
     BLE.stopScan();
 
-    controlLed(peripheral);
+    BLEcontrol(peripheral);
     BLE.scanForUuid("19b10000-e8f2-537e-4f6c-d104768a1214");
   }
   
   
 }
 
-void controlLed(BLEDevice peripheral) {
+void BLEcontrol(BLEDevice peripheral) {
   // connect to the peripheral
   Serial.println("Connecting ...");
 
