@@ -1,4 +1,4 @@
-#Robot met bluetooth besturen
+# Robot met bluetooth besturen
 
 De bedoeling hiervan was om te proberen de robot met bluetooth te kunnen aansturen. Er waren echter enkele problemen. 
 De setpoint verzetten was geen goede manier om vooruit of achteruit te rijden. Dit komt omdat de robot niet getuned is voor deze setpoint en ook geen snelheidscontroller heeft.
