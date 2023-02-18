@@ -1,5 +1,4 @@
 #include <Arduino_LSM9DS1.h>
-#include <ArduinoBLE.h>
 
 float aX, aY, aZ;  //acceleratie rond de assen
 float gX, gY, gZ;  //hoeksnelheid rond de assen
@@ -35,10 +34,6 @@ double setPoint = -2.75;
 double outPID;
 float motorOutput;
 
-//BLE
-BLEService customService("19B10000-E8F2-537E-4F6C-D104768A1214");
-BLEFloatCharacteristic PIDoutput("2A19", BLERead | BLENotify);
-
 
 /* SETUP */
 
@@ -55,19 +50,6 @@ void setup() {
     Serial.println("Failed to initialize IMU!");  //IMU binnenhalen
     while (1);
   }
-
-    if (!BLE.begin()) {
-    Serial.println("starting BLE failed!");
-    while (1);
-  }
-
-  BLE.setLocalName("PID_Monitor");
-  BLE.setAdvertisedService(customService); // add the service UUID
-  customService.addCharacteristic(PIDoutput); // add the battery level characteristic
-  BLE.addService(customService); // Add the battery service
-  PIDoutput.writeValue(outPID); 
-  BLE.advertise();
-
 
   IMU.readAcceleration(aX, aY, aZ);
   IMU.readGyroscope(gX, gY, gZ);  //Dit wordt uitgevoerd omdat de eerste waarden onbruikbaar zijn (waarden die niet kloppen)
@@ -115,7 +97,6 @@ void motorSturing(int motorSpeed) {  // Programma om de richting en de snelheid 
     analogWrite(enB, abs(motorOutput)+15);
 
   } else {
-
     digitalWrite(in1, HIGH);  // Omkeren van de polariteit van de linker motor om de robot naar voor te sturen
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);  // Omkeren van de polariteit van de rechter motor om de robot naar voor te sturen
@@ -127,14 +108,7 @@ void motorSturing(int motorSpeed) {  // Programma om de richting en de snelheid 
 }
 
 void loop() {
-    BLEDevice central = BLE.central();
-  
- if(central){
-    PIDoutput.writeValue((float)currentAngle);
-  }
-
-  calculateAngle();
-  
+  calculateAngle(); 
 }
 
 
